@@ -1,0 +1,8 @@
+{% for example in include.examples %}
+   {% if example.caption %}
+   <h4> {{ example.caption | strip_html }} </h4>
+   {% endif %}
+   {% highlight javascript %}
+      {{ example.code }}
+   {% endhighlight %}
+{% endfor %}

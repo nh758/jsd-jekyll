@@ -1,0 +1,18 @@
+{% assign categories = site.pages | where: "is-category", include.category %}
+
+{% for i in (0..5) %}
+   {% assign parent = categories[i].category %}
+   {% assign next = site.pages | where: "is-category", parent %}
+   {% assign new = categories | concat: next %}
+   {% assign categories = new %}
+   {% if parent == "home" %}
+      {% break %}
+   {% endif %}
+{% endfor %}
+{% assign reverse = categories | reverse %}
+<nav>
+   {% for category in reverse %}
+      <a href="{{ category.url }}">{{ category.title }}</a> >
+   {% endfor %}
+   <a href="#"> {{include.title}} </a>
+</nav>

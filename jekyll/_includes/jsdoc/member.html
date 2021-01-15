@@ -1,0 +1,6 @@
+{% assign doc = include.doc %}
+<h3>
+  {{ doc.longname }}
+</h3>
+{% if doc.description %}{{ doc.description }}{% endif %}
+{% include jsdoc/source meta=doc.meta %}

@@ -61,11 +61,14 @@ exports.publish = function(data, opts) {
   copyDirectory("static", destination);
 
   //Save category pages
-  categories.forEach((category, i) => {
+  categories.forEach(category => {
+    if (category === "api") {
+      return;
+    }
     let data = {};
     data.title = category;
     data.layout = "index";
-    data.is_category = category;
+    data["is-category"] = category;
     data.category = "api";
     let yamlStr = yaml.safeDump(data);
     try {
@@ -79,7 +82,7 @@ exports.publish = function(data, opts) {
     }
   });
   // if (skips > 0) {
-    // logger.warn(`Skipped creating ${skips} existing files`);
+  // logger.warn(`Skipped creating ${skips} existing files`);
   // }
 };
 

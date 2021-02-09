@@ -1,0 +1,32 @@
+{% assign doc = include.doc %}
+<a class="anchor" id="{{ doc.longname }}"></a>
+<div class="level">
+  <div class="level-left">
+    <div class="tag is-dark level-item">{{ doc.scope }}</div>
+    <h3 class="title is-3 level-item">
+      {{ doc.name }} ({{ doc.paramStrings | join: ', ' }})
+      {% if doc.returns %}
+      ⇒ <code>{{ doc.returns[0].type.names | join, ' | '}}</code>
+      {% endif %}
+    </h3>
+  </div>
+</div>
+<div class="content">
+{{ doc.description }}
+{% if doc.route %}
+  {% include jsdoc/route.html doc = doc %}
+{% endif %}
+{% if doc.params %}
+  {% include jsdoc/params.html params = doc.params %}
+{% endif %}
+{% include jsdoc/source.html meta=doc.meta %}
+{% if doc.returns %}
+  <h3>Returns</h3>
+  <code>{{ doc.returns[0].type.names | join, ' | '}}</code>
+  {{ doc.returns.description }}
+{% endif %}
+{% if doc.examples %}
+  <h3>Example</h3>
+  {% include jsdoc/example.html examples = doc.examples %}
+{% endif %}
+</div>

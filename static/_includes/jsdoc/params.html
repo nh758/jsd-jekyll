@@ -1,0 +1,30 @@
+<table>
+  <tr>
+    <th>{% if include.prefix %}{{include.prefix}} {% endif %}Parameter</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  {% for param in include.params %}
+  <tr>
+    <td>{{ param.name }}</td>
+    <td><code>{{ param.type.names | join ' | ' }} </code></td>
+    <td>
+      {% if param.optional %}
+      <em>[Optional]</em>
+      {% endif %} {{ param.description | strip_html }} {% if param.definition %}
+      <table>
+        {% for prop in param.definition %}
+        <tr>
+          <td>{{ prop.name }}</td>
+          <td><code>{{ prop.type.names | join ' | '}}</code></td>
+          <td>{{ prop.description | strip_html }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      {% endif %} {% if param.defaultvalue %}
+      <br /><b>Default:</b> {{ param.defaultvalue }} {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>

@@ -1,6 +1,7 @@
 {% assign doc = include.doc %}
+<a class="anchor" id="{{ doc.longname }}"></a>
 <h3>
   {{ doc.longname }}
 </h3>
 {% if doc.description %}{{ doc.description }}{% endif %}
-{% include jsdoc/source meta=doc.meta %}
+{% include jsdoc/source.html meta=doc.meta %}

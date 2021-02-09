@@ -1,0 +1,66 @@
+{% assign lookup = site.data.jsdoc.docs | where: "longname", include.module %}
+{% assign mod = lookup | where: "kind", "module" | first %}
+{% assign class = lookup | where: "kind", "class" | first %}
+{% assign all = site.data.jsdoc.docs | where: "memberof", include.module %}
+{% assign functionDocs = all | where: "kind", "function" %}
+{% assign constants = all | where: "kind", "constant" %}
+{% assign members = all | where: "kind", "members" %}
+{% assign members = members | concat: constants %}
+{% assign routes = functionDocs | where_exp: "doc", "doc.route != nil" %}
+{% assign functions = functionDocs | where_exp: "doc", "doc.route == nil" %}
+
+<div class="columns">
+  <div class="column is-3">
+    <div class="section sidebar pt-0">
+      <div class="menu scroll">
+        {% if class %}
+        <p class="menu-label">Class</p>
+        <ul class="menu-list">
+          <li><a href="#constructor">Constructor</a></li>
+        </ul>
+        {% endif %}
+        {% if routes[0] %}
+        <p class="menu-label">Routes</p>
+        <ul class="menu-list">
+          {% for route in routes %}
+          <li><a href="#{{ route.longname }}">{{ route.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if functions %}
+        <p class="menu-label">Methods</p>
+        <ul class="menu-list">
+          {% for function in functions %}
+          <li><a href="#{{ function.longname }}">{{ function.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if members.length > 0 %}
+        <p class="menu-label">Members</p>
+        <ul class="menu-list">
+          {% for member in members %}
+          <li><a href="#{{ member.longname }}">{{ member.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="column is-9">
+    {% if class %}
+       {% include jsdoc/class.html doc = class name = mod.name %}
+       <hr>
+    {% endif %}
+    {% for route in routes %}
+      {% include jsdoc/route.html doc = route %}
+      <hr>
+    {% endfor %}
+    {% for function in functions %}
+      {% include jsdoc/function.html doc = function %}
+      <hr>
+    {% endfor %}
+    {% for member in members %}
+      {% include jsdoc/member.html doc = member %}
+    {% endfor %}
+  </div>
+</div>

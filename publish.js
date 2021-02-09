@@ -58,7 +58,7 @@ exports.publish = function(data, opts) {
   );
 
   //Copy static files
-  copyDirectory("jekyll", destination);
+  copyDirectory("static", destination);
 
   //Save category pages
   categories.forEach((category, i) => {

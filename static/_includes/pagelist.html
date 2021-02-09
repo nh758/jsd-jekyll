@@ -1,0 +1,22 @@
+{% assign all = site.pages | where: "category", include.category | sort: "title" %}
+{% assign categories = all | where_exp: "page", "page.is-category != nil" %}
+{% assign pages = all | where_exp: "page", "page.is-category == nil" %}
+
+<div class="menu">
+  {% if categories[0] %}
+    <p class="menu-label">Categories</p>
+    <ul class="menu-list">
+      {% for page in categories %}
+	      <li><a href="{{ page.url }}">{{ page.title }}</a> {{ page.description }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if pages[0] %}
+    <p class="menu-label">Pages</p>
+    <ul class="menu-list">
+    {% for page in pages %}
+  	  <li><a href="{{ page.url }}">{{ page.title }}{% if page.description %}<em> - {{ page.description }}</em>{% endif %}</a></li>
+    {% endfor %}
+  {% endif %}
+  </ul>
+</div>

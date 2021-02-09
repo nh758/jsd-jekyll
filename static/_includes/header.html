@@ -1,0 +1,33 @@
+<nav class="navbar is-primary {% if site.fixed_navbar %} is-fixed-{{ site.fixed_navbar }} {% endif %}">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="{{ site.baseurl }}/" class="navbar-item">
+                {{ site.title }}
+            </a>
+            <!-- <a role="button" class="navbar-burger burger is-primary" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a> -->
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                {% unless page.hide_breadcrumbs %}
+                  <div class="navbar-item is-primary">
+                  {% include navbar.html category=page.category title=page.title icon=page.icon %}
+                  </div>
+                {% endunless %}
+            </div>
+
+            <div class="navbar-end">
+                {% if site.gh_sponsor %}
+                <a class="navbar-item" href="https://github.com/sponsors/{{ site.gh_sponsor }}">
+                    <span class="icon gh-sponsor"><i class="fas fa-heart"></i></span>
+                    <span>Sponsor</span>
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</nav>

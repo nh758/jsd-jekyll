@@ -1,0 +1,47 @@
+{% if include.category != "home" and include.category != nil %}
+  {% assign categories = site.pages | where: "is-category", include.category %}
+  {% for i in (0..5) %}
+    {% assign parent = categories[i].category %}
+    {% if parent == "home" %}
+      {% break %}
+    {% endif %}
+    {% assign next = site.pages | where: "is-category", parent %}
+    {% assign new = categories | concat: next %}
+    {% assign categories = new %}
+  {% endfor %}
+  {% assign reverse = categories | reverse %}
+{% endif %}
+<nav class="breadcrumb has-navbar-fixed-top" aria-label="breadcrumbs">
+  <ul>
+    <li>
+      <a href="{{ site.url }}"><div class="has-text-white"">
+        <span class="icon is-small">
+          <i class="fas fa-home" aria-hidden="true"></i>
+        </span>
+        <span>Home</span>
+      </div></a>
+    </li>
+    {% if reverse %}
+      {% for category in reverse %}
+        <li><a href="{{ category.url }}"><div class="has-text-white"">
+          {% if category.icon %}
+            <span class="icon is-small">
+              <i class="fas {{ category.icon }}" aria-hidden="true"></i>
+            </span>
+          {% endif %}
+          <span>{{ category.title }}</span>
+        </div></a></li>
+      {% endfor %}
+    {% endif %}
+    <li class="is-active">
+      <a href="#" aria-current="page">
+        {% if include.icon %}
+          <span class="icon is-small">
+            <i class="fas {{ include.icon }}" aria-hidden="true"></i>
+          </span>
+        {% endif %}
+        <span>{{ include.title }}</span>
+      </a>
+    </li>
+  </ul>
+</nav>

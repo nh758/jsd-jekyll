@@ -1,0 +1,29 @@
+{% assign doc = include.doc %}
+{% if doc.classdesc %}
+  <div class="content">
+    {{ doc.classdesc }}
+  </div>
+{% endif %}
+<a class="anchor" id="constructor"></a>
+<div class="level">
+  <div class="level-left">
+    <div class="tag is-medium level-item">Constructor</div>
+    <h3 class="title is-3 level-item">
+       new {{ include.name }}
+       ({{ doc.paramStrings | join: ', ' }})
+    </h3>
+  </div>
+</div>
+<div class="content">
+  {% if doc.description %}{{ doc.description }}{% endif %}
+  {% if doc.params %}
+     {% include jsdoc/params.html params = doc.params %}
+  {% endif %}
+
+  {% include jsdoc/source.html meta=doc.meta %}
+
+  {% if doc.examples %}
+     <h3>Example</h3>
+     {% include jsdoc/example.html examples = doc.examples %}
+  {% endif %}
+</div>

@@ -1,0 +1,6 @@
+{% assign meta = include.meta %}
+{% if meta.url %}
+  <a href="{{ meta.url }}"><span class="has-text-grey">{{ meta.repopath }}/</span>{{ meta.filename }} Line: {{ meta.lineno }}</a>
+{% else %}
+  <a class="has-text-grey">{{ meta.filename }} Line: {{ meta.lineno }}</a>
+{% endif %}

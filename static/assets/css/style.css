@@ -1,0 +1,41 @@
+/* Compensate for a fixed header when navigating to headings */
+h1::before,
+h2::before,
+h3::before,
+h4::before,
+h5::before,
+h6::before {
+  display: block;
+  content: " ";
+  margin-top: -70px;
+  height: 70px;
+  visibility: hidden;
+  pointer-events: none;
+}
+.anchor {
+    display: block;
+    position: relative;
+    top: -70px;
+    visibility: hidden;
+}
+/*Sticky Sidebars*/
+.sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
+  vertical-align: top;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.scroll {
+}
+
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}

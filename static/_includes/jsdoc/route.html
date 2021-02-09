@@ -1,0 +1,49 @@
+{% assign doc = include.doc %}
+{% assign type=doc.route.type.names | join ' | ' | escape %}
+{% assign color = ""%}
+{% case type %}
+  {% when "GET" %}
+    {% assign color = "is-info" %}
+  {% when "POST" %}
+    {% assign color = "is-success" %}
+  {% when "PUT" %}
+    {% assign color = "is-warning" %}
+  {% when "DELETE" %}
+    {% assign color = "is-danger" %}
+{% endcase %}
+<a class="anchor" id="{{ doc.longname }}"></a>
+<article class="message {{ color }}">
+  <div class="message-body p-3">
+    <h3 class="title is-4 m-0">
+      <span class="tag is-medium {{ color }}">{{ type }}</span> {{ doc.route.name }}
+    </h3>
+  </div>
+</article>
+<div class="content">
+  {{ doc.description }}
+  {% if doc.params %}
+    {% include jsdoc/params.html params = doc.params %}
+  {% endif %}
+  {% if doc.routeParam %}
+    {% include jsdoc/params.html params = doc.routeParam prefix = 'Path' %}
+  {% endif %}
+  {% if doc.queryParam %}
+    {% include jsdoc/params.html params = doc.queryParam prefix = 'Query' %}
+  {% endif %}
+  {% if doc.headerParam %}
+    {% include jsdoc/params.html params = doc.headerParam prefix = 'Header' %}
+  {% endif %}
+  {% if doc.bodyParam %}
+    {% include jsdoc/params.html params = doc.bodyParam prefix = 'Body' %}
+  {% endif %}
+  {% include jsdoc/source.html meta=doc.meta %}
+  {% if doc.returns %}
+    <h3>Returns</h3>
+    <code>{{ doc.returns[0].type.names | join, ' | '}}</code>
+    {{ doc.returns.description }}
+  {% endif %}
+  {% if doc.examples %}
+    <h3>Example</h3>
+    {% include jsdoc/example.html examples = doc.examples %}
+  {% endif %}
+</div>

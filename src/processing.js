@@ -16,6 +16,9 @@ export function processParams(input) {
     if (!param.hasOwnProperty("name")) {
       param.name = "unkown";
     }
+    if (param.hasOwnProperty("type")) {
+      param.type.names = processTypes(param.type.names);
+    }
     //Split name to process jsdoc @param {type} obj.prop names
     let name = param.name.split(".");
     if (name.length > 1 && paramStrings.includes(name[0])) {
@@ -26,9 +29,6 @@ export function processParams(input) {
       }
       params[index].definition.push(param);
     } else {
-      if (param.hasOwnProperty("type")) {
-        param.type.names = processTypes(param.type.names);
-      }
       paramStrings.push(name.join("."));
       params.push(param);
     }
@@ -37,22 +37,47 @@ export function processParams(input) {
 }
 
 /**
- * Normalizes type names
+ * Normalizes type names and sets up linking
  * @param {Object[]} names array of type names
  * @return {Object[]} array of type names
  */
 export function processTypes(names) {
   names.forEach((name, i) => {
+    let isArray = false;
     //format Array.<Obj> -> Obj[]
     if (/Array\.<.*>/.test(name)) {
       let capture = name.match(/Array\.<(.*)>/);
-      name = name.replace(/Array\.<.*>/, capture[1] + "[]");
+      isArray = true;
+      name = name.replace(/Array\.<(.*)>/, "$1");
     }
-    names[i] = name
-      .replace(/obj(ect)?/i, "Object")
-      .replace(/arr(ay)?/i, "Array")
-      .replace(/bool(ean)?/i, "Boolean")
-      .replace(/str(ing)?/i, "String");
+    name = name
+      .replace(/module:(\w*)/, "<a href='./$1.html'>$1</a>")
+      .replace(
+        /^obj(ect)?$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object'>Object</a>"
+      )
+      .replace(
+        /^arr(ay)?$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array'>Array</a>"
+      )
+      .replace(
+        /^bool(ean)?$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean'>Boolean</a>"
+      )
+      .replace(/^int(eger)?$/i, "Integer")
+      .replace(
+        /^num(ber)?$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number'>Number</a>"
+      )
+      .replace(
+        /^str(ing)?$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String'>String</a>"
+      )
+      .replace(
+        /^json$/i,
+        "<a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON'>JSON</a>"
+      );
+    names[i] = isArray ? `[${name}]` : name;
   });
   return names;
 }
@@ -62,18 +87,22 @@ export function processTypes(names) {
  * @param {type} meta jdoc doc.meta property
  * @return {type} repo url
  */
-export function githubUrl(meta, repoUrls) {
+export function githubUrl(meta, repos) {
   var url = "";
   //For subrepositories will try to match each repoUrl, so that the nested repo url will be returned.
-  repoUrls.forEach((repo, i) => {
-    let regex = new RegExp(repo.folder + "(.)*");
+  repos.forEach(repo => {
+    let regex = new RegExp(repo.folder + "(.*)");
     url = meta.path.match(regex)
-      ? repo.url +
-        extract(meta.path, regex) +
-        meta.filename +
-        "#L" +
-        meta.lineno
+      ? `https://github.com/${repo.name}/blob/master${extract(
+          meta.path,
+          regex
+        )}/${meta.filename}#L${meta.lineno}`
       : url;
+    // repo.url +
+    //   extract(meta.path, regex) +
+    //   meta.filename +
+    //   "#L" +
+    //   meta.lineno
   });
   return url;
 }

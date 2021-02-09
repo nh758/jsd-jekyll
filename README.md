@@ -1,42 +1,82 @@
 # JSDoc Jekyll
 
-JSDOC Plugin and Templates to make a Jekyll Documentation Site from jsdoc comments
+A JSDOC Plugin and Template to generate a GitHub Pages compatible Jekyll Documentation Site from jsdoc comments.
 
 ## Install
 
 ```
-npm install --save jsdoc4jekyll
+npm install --save-dev jsd-jekyll
+```
+### Configuration
+
+Add `"./node_modules/jsd-jekyll"` as a plugin and template in your jsdoc config file.
+
+**Example:**
+
+```JSON
+{
+   "opts": {
+      "template": "./node_modules/jsd-jekyll",
+      "destination": "./out/",
+      "recurse": true
+   },
+   "plugins": ["./node_modules/jsd-jekyll"]
+}
 ```
 
-Add `"./node_modules/jsdoc4jekyll"` as a plugin and template in your jsdoc config file.
+#### Repository Links
 
-## Repository Links
-
-Optionally a link to your source code on github can be added to the Documentation.
-Under opts in jsdoc conf file add
+Optionally a link to your source code on GitHub can be added to the documentation.
+Under opts in the jsdoc config file add:
 
 ```json
 "opts": {
-  "repoUrls" : [{
-    "folder": "folder",
-    "url": "https://github.com/user/repo"
+  "repos" : [{
+    "folder": "folderName",
+    "name": "user/repo"
   }]
 }
 ```
 
 Multiple repos can be added to the array to support sub repositories based on the file path of the source code.
 
-## Custom Tags
+## JSDoc
+Basic @jsdoc tags should work as [documented](https://jsdoc.app/). Not all currently work with this template, more will be added over time.
 
-`@category`  
-`@...`
+### Custom Tags
+The following custom tags can be added.
+#### `@category`  
+A category can be added to a `@module` comment block to organize modules. Each category will create an index page with the relevant modules linked to the main api index.
+Modules without a `@category` tag will display on the api index.
 
-## Setup Jekyll
-
-Use to copy the Jekyll setup files and templates to the docs directory.
-
-```bash
-jsd-jekyll -a -d ./docs/
+#### `@route`
+Use @route to document api routes in the following format
+``` js
+/**
+/* @route {GET} /api/path description...
+*/
+```
+Add parameters using the appropriate param tag (`@routeparam`, `@headerparam`, `@bodyparam`, or `@queryparam`). All follow the `@param` fromat (`{type} name description`)
+### Linking Types
+When using a module as a return or parameter type preface the module name with `module:`
+**Example**:
+```js
+/**
+/* @param {module:myMod1} paramName description of the parameter
+/* @returns {module:myMod2} description of the return
+*/
 ```
 
-Leave off the --all / -a flag to specify which files to copy. The docs may not display correctly without all the jekyll files.
+## Jekyll
+To run Jekyll locally (requires ruby):
+
+``` bash
+bundle exec jekyll serve
+```
+Only `/_data/jsdoc.json` will be overwritten when running jsdoc a second time. Other files can be customized as needed. To reset them, delete and run jsdoc.
+
+## Set up GitHub Pages
+
+## Credits
+- Uses modified jekyll theme [bulam-clean-theme](https://github.com/chrisrhymes/bulma-clean-theme#readme)
+- Inspiration from [jsdoc-route-plugin](https://github.com/bvanderlaan/jsdoc-route-plugin#readme)

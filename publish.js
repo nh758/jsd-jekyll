@@ -66,6 +66,7 @@ exports.publish = function(data, opts) {
     data.title = category;
     data.layout = "index";
     data.is_category = category;
+    data.category = "api";
     let yamlStr = yaml.safeDump(data);
     try {
       fs.writeFileSync(

@@ -71,6 +71,7 @@ When using a module as a return or parameter type preface the module name with `
 To run Jekyll locally (requires ruby):
 
 ``` bash
+bundle install
 bundle exec jekyll serve
 ```
 Only `/_data/jsdoc.json` will be overwritten when running jsdoc a second time. Other files can be customized as needed. To reset them, delete and run jsdoc.

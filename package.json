@@ -1,8 +1,8 @@
 {
   "name": "jsd-jekyll",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JSDoc Plugin and Template for making a Github Pages compatable Jekyll Site",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {},
   "repository": {
     "type": "git",
@@ -11,7 +11,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "esm": "^3.2.25",
     "fs-extra": "^9.0.1",
     "js-yaml": "^3.14.1"
   },

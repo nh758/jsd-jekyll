@@ -1,15 +1,11 @@
 /**
  * JSDoc plugin
  */
-import { processParams, processTypes, githubUrl, extract } from "./processing";
-import fs from "fs";
-import env from "jsdoc/lib/jsdoc/env";
+const { processParams, processTypes, githubUrl, extract } = require("./processing");
+const fs = require("jsdoc/fs");
+const env = require("jsdoc/env");
 
 exports.handlers = {
-  // parseBegin: function(e) {
-  //   console.log("START: ParseBegin function (only used for testing)");
-  //   console.log("END: ParseBegin function (only used for testing)");
-  // },
   newDoclet: function(e) {
     if (e.doclet.hasOwnProperty("params")) {
       let processed = processParams(e.doclet.params);
@@ -39,16 +35,11 @@ exports.handlers = {
       Array.isArray(env.opts.repos) &&
       env.opts.repos.length > 0
     ) {
-      count++;
       e.doclet.meta.url = githubUrl(e.doclet.meta, env.opts.repos);
       let regex = new RegExp(env.opts.repos[0]["folder"] + "(.*)");
       e.doclet.meta.repopath = extract(e.doclet.meta.path, regex).replace(/\\/g, "/");
     }
   },
-  parseComplete: function(e) {
-    // console.log("START: ParseComplete function (only used for testing)");
-    // console.log("END: ParseComplete function (only used for testing)");
-  }
 };
 
 exports.defineTags = function(dictionary) {
@@ -99,12 +90,6 @@ exports.defineTags = function(dictionary) {
       paramOnTagged(doclet, tag, "queryParam");
     }
   });
-  // dictionary.defineTag("authentication", {
-  //   mustHaveValue: true,
-  //   onTagged: (doclet, tag) => {
-  //     doclet.routeParam = tag.value;
-  //   }
-  // });
 };
 
 /**
@@ -112,7 +97,7 @@ exports.defineTags = function(dictionary) {
  *
  * @param {type} doclet the current jsdoc doclet
  * @param {type} tag    the jsdoc tag object
- * @param {type} key    Name of the property of the doclet to save the tag.value to 
+ * @param {type} key    Name of the property of the doclet to save the tag.value to
  */
 function paramOnTagged(doclet, tag, key) {
   if (!doclet[key]) {

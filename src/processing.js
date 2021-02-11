@@ -8,7 +8,7 @@
  * @return {object}  .params = array of param to overite doc.params
  *                   .paramStrings = array of param names
  */
-export function processParams(input) {
+function processParams(input) {
   var paramStrings = [];
   var params = [];
   input.forEach((param, i) => {
@@ -41,7 +41,7 @@ export function processParams(input) {
  * @param {Object[]} names array of type names
  * @return {Object[]} array of type names
  */
-export function processTypes(names) {
+function processTypes(names) {
   names.forEach((name, i) => {
     let isArray = false;
     //format Array.<Obj> -> Obj[]
@@ -87,7 +87,7 @@ export function processTypes(names) {
  * @param {type} meta jdoc doc.meta property
  * @return {type} repo url
  */
-export function githubUrl(meta, repos) {
+function githubUrl(meta, repos) {
   var url = "";
   //For subrepositories will try to match each repoUrl, so that the nested repo url will be returned.
   repos.forEach(repo => {
@@ -98,11 +98,6 @@ export function githubUrl(meta, repos) {
           regex
         )}/${meta.filename}#L${meta.lineno}`
       : url;
-    // repo.url +
-    //   extract(meta.path, regex) +
-    //   meta.filename +
-    //   "#L" +
-    //   meta.lineno
   });
   return url;
 }
@@ -113,6 +108,8 @@ export function githubUrl(meta, repos) {
  * @param {RegEx} regex  Regular expression with capture group.
  * @return {string} Captured string
  */
-export function extract(string, regex) {
+function extract(string, regex) {
   return string.match(regex)[1];
 }
+
+module.exports = { processParams, processTypes, githubUrl, extract };

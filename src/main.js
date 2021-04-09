@@ -15,6 +15,15 @@ exports.handlers = {
         e.source = `/** @module ${file} */` + e.source;
       }
     }
+    if (env.opts.folderCategory) {
+      if (new RegExp('@module').test(e.source)){
+        const captures = e.filename.match(/\\(\w*)\\(\w*)\\(\w*)\./);
+        const category = captures[2];
+        const moduleName = e.source.match(/(@module +\w*) ?/)[1];
+        const replace = `${moduleName} \n * @category ${captures[1]}-${captures[2]}`
+        e.source = e.source.replace(/(@module +\w*) ?/, replace);
+      }
+    }
   },
   jsdocCommentFound: function(e) {
     // Option to fix @function names with name() -> name and tag @description written after a function

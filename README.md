@@ -61,6 +61,8 @@ This will tag all files processed with `@module filename` if no `@module` tag is
     * @description This is a description in the wrong place.
     */
   ```
+##### `folderCategory` { boolean } default false
+- Assigns modules to categories based on the file location `/api/main/index.js` will be tagged `@category api-main`
 
 ## JSDoc
 Basic @jsdoc tags should work as [documented](https://jsdoc.app/). Not all currently work with this template, more will be added over time.

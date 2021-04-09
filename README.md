@@ -24,8 +24,10 @@ Add `"./node_modules/jsd-jekyll"` as a plugin and template in your jsdoc config 
 }
 ```
 
-#### Repository Links
 
+#### Extra opts
+
+##### `repos` { array }
 Optionally a link to your source code on GitHub can be added to the documentation.
 Under opts in the jsdoc config file add:
 
@@ -39,6 +41,26 @@ Under opts in the jsdoc config file add:
 ```
 
 Multiple repos can be added to the array to support sub repositories based on the file path of the source code.
+
+##### `includeAll` { boolean } default false
+This will tag all files processed with `@module filename` if no `@module` tag is present.
+
+##### `functionFix` { boolean } default false
+- Removes bracket from a function names. `@function   myFunction()` becomes `@function myFunction`.
+- Tags untagged descriptions added below the `@function` tag
+  ```
+  /**
+   * @function myFunction
+   * This is a description in the wrong place.
+   */
+  ```
+  Changes to
+  ```
+   /**
+    * @function myFunction
+    * @description This is a description in the wrong place.
+    */
+  ```
 
 ## JSDoc
 Basic @jsdoc tags should work as [documented](https://jsdoc.app/). Not all currently work with this template, more will be added over time.

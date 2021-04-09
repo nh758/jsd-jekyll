@@ -6,6 +6,34 @@ const fs = require("jsdoc/fs");
 const env = require("jsdoc/env");
 
 exports.handlers = {
+  beforeParse: function(e) {
+    //Option to tag each file with '@module filename'
+    if (env.opts.includeAll) {
+      if (new RegExp('@module').test(e.source) == false){
+        const captures = e.filename.match(/\\(\w*)\\(\w*)\./);
+        const file = captures[2];
+        e.source = `/** @module ${file} */` + e.source;
+      }
+    }
+  },
+  jsdocCommentFound: function(e) {
+    // Option to fix @function names with name() -> name and tag @description written after a function
+    if (env.opts.functionFix) {
+      const funRegEx = new RegExp(/@(?:method|function)([^@]+)/);
+      const extraRegEx = new RegExp(/(\w+[^@]+\* )(\w+[^@]*)/);
+      if (funRegEx.test(e.comment)) {
+        let content = e.comment.match(funRegEx)[1];
+        content = content.replace(/\(\)/,"");
+        let replacement  = `@function${content}`;
+        if (extraRegEx.test(content)) {
+          const split = content.split('*');
+          split[1] = ` @description${split[1]}`
+          replacement = `@function${split.join('*')}`
+        }
+        e.comment = e.comment.replace(funRegEx, replacement);
+      }
+    }
+  },
   newDoclet: function(e) {
     if (e.doclet.hasOwnProperty("params")) {
       let processed = processParams(e.doclet.params);

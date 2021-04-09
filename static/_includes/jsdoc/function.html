@@ -4,7 +4,7 @@
   <div class="level-left">
     <div class="tag is-dark level-item">{{ doc.scope }}</div>
     <h3 class="title is-3 level-item">
-      {{ doc.name }} ({{ doc.paramStrings | join: ', ' }})
+      {{ doc.name }} ({% if doc.paramStrings %}{{ doc.paramStrings | join: ', ' }}{% else %} {% endif %})
       {% if doc.returns %}
       ⇒ <code>{{ doc.returns[0].type.names | join, ' | '}}</code>
       {% endif %}
@@ -21,9 +21,8 @@
 {% endif %}
 {% include jsdoc/source.html meta=doc.meta %}
 {% if doc.returns %}
-  <h3>Returns</h3>
-  <code>{{ doc.returns[0].type.names | join, ' | '}}</code>
-  {{ doc.returns.description }}
+  <h3>Returns <code>{{ doc.returns[0].type.names | join, ' | '}}</code></h3>
+  {{ doc.returns[0].description }}
 {% endif %}
 {% if doc.examples %}
   <h3>Example</h3>

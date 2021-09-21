@@ -1,7 +1,12 @@
 /**
  * JSDoc plugin
  */
-const { processParams, processTypes, githubUrl, extract } = require("./processing");
+const {
+  processParams,
+  processTypes,
+  githubUrl,
+  extract
+} = require("./processing");
 const fs = require("jsdoc/fs");
 const env = require("jsdoc/env");
 
@@ -9,19 +14,25 @@ exports.handlers = {
   beforeParse: function(e) {
     //Option to tag each file with '@module filename'
     if (env.opts.includeAll) {
-      if (new RegExp('@module').test(e.source) == false){
-        const captures = e.filename.match(/\\(\w*)\\(\w*)\./);
-        const file = captures[2];
-        e.source = `/** @module ${file} */` + e.source;
+      if (new RegExp("@module").test(e.source) == false) {
+        try {
+          const captures = e.filename.match(/\\(.*)\\(.*)\./);
+          const file = captures[2];
+          e.source = `/** @module ${file} */` + e.source;
+        } catch (err) {
+          console.log(err, e);
+        }
       }
     }
     if (env.opts.folderCategory) {
-      if (new RegExp('@module').test(e.source)){
-        const captures = e.filename.match(/\\(\w*)\\(\w*)\\(\w*)\./);
-        const category = captures[2];
-        const moduleName = e.source.match(/(@module +\w*) ?/)[1];
-        const replace = `${moduleName} \n * @category ${captures[1]}-${captures[2]}`
-        e.source = e.source.replace(/(@module +\w*) ?/, replace);
+      //Option to assign modules to categories based on folder
+      if (new RegExp("@module").test(e.source)) {
+        const captures = e.filename.match(/\\([^\\]+)\\([^\\]+)\\([^\\]+)\./);
+        const moduleName = e.source.match(/(@module +\S*) ?/)[1];
+        // const category = captures[2];
+
+        const replace = `${moduleName} \n * @category ${captures[1]}-${captures[2]}`;
+        e.source = e.source.replace(/(@module +\S*) ?/, replace);
       }
     }
   },
@@ -32,12 +43,12 @@ exports.handlers = {
       const extraRegEx = new RegExp(/(\w+[^@]+\* )(\w+[^@]*)/);
       if (funRegEx.test(e.comment)) {
         let content = e.comment.match(funRegEx)[1];
-        content = content.replace(/\(\)/,"");
-        let replacement  = `@function${content}`;
+        content = content.replace(/\(\)/, "");
+        let replacement = `@function${content}`;
         if (extraRegEx.test(content)) {
-          const split = content.split('*');
-          split[1] = ` @description${split[1]}`
-          replacement = `@function${split.join('*')}`
+          const split = content.split("*");
+          split[1] = ` @description${split[1]}`;
+          replacement = `@function${split.join("*")}`;
         }
         e.comment = e.comment.replace(funRegEx, replacement);
       }
@@ -74,9 +85,12 @@ exports.handlers = {
     ) {
       e.doclet.meta.url = githubUrl(e.doclet.meta, env.opts.repos);
       let regex = new RegExp(env.opts.repos[0]["folder"] + "(.*)");
-      e.doclet.meta.repopath = extract(e.doclet.meta.path, regex).replace(/\\/g, "/");
+      e.doclet.meta.repopath = extract(e.doclet.meta.path, regex).replace(
+        /\\/g,
+        "/"
+      );
     }
-  },
+  }
 };
 
 exports.defineTags = function(dictionary) {
